@@ -1,3 +1,9 @@
+# IntelliJ Platform project files
+.idea
+
+# Go mod vendor dir
+vendor
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
