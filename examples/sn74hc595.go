@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	sreg, err := shiftregister.NewSr74hc595(17, 27, 18, 16, false)
+	sreg, err := shiftregister.NewSn74hc595(17, 27, 18, 16, false)
 	if err != nil {
 		log.Fatalln(err)
 	}

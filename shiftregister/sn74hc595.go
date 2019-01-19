@@ -6,8 +6,8 @@ import (
 	"math"
 )
 
-// sr74hc595 is a structure for managing an 74HC595 shift register
-type sr74hc595 struct {
+// sn74hc595 is a structure for managing an SN74HC595 shift register
+type sn74hc595 struct {
 	ser           rpio.Pin
 	srclk         rpio.Pin
 	rclk          rpio.Pin
@@ -16,8 +16,8 @@ type sr74hc595 struct {
 }
 
 // SetInputPins sets and initializes pins connected to a shift register
-func NewSr74hc595(ser int, srclk int, rclk int, outputPins uint, positiveLogic bool) (*sr74hc595, error) {
-	sr := sr74hc595{}
+func NewSn74hc595(ser int, srclk int, rclk int, outputPins uint, positiveLogic bool) (*sn74hc595, error) {
+	sr := sn74hc595{}
 	if err := sr.initBoardPins(ser, srclk, rclk); err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func NewSr74hc595(ser int, srclk int, rclk int, outputPins uint, positiveLogic b
 	return &sr, nil
 }
 
-func (sr *sr74hc595) initBoardPins(ser int, srclk int, rclk int) error {
+func (sr *sn74hc595) initBoardPins(ser int, srclk int, rclk int) error {
 	if err := rpio.Open(); err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (sr *sr74hc595) initBoardPins(ser int, srclk int, rclk int) error {
 }
 
 // SetOutputParams defines what kind of characteristics has a connected shift register
-func (sr *sr74hc595) initChipPins(outputPins uint, positiveLogic bool) (err error) {
+func (sr *sn74hc595) initChipPins(outputPins uint, positiveLogic bool) (err error) {
 	if outputPins < 8 || outputPins%8 != 0 {
 		return errors.New("wrong number of output pins")
 	}
@@ -59,12 +59,12 @@ func (sr *sr74hc595) initChipPins(outputPins uint, positiveLogic bool) (err erro
 	return nil
 }
 
-func (sr74hc595) Close() error {
+func (sn74hc595) Close() error {
 	return rpio.Close()
 }
 
 // WriteBit writes one bit into shift register
-func (sr sr74hc595) WriteBit(bit uint) { // ?? bool
+func (sr sn74hc595) WriteBit(bit uint) { // ?? bool
 	if bit == 0 {
 		if sr.positiveLogic == true {
 			sr.ser.Low()
@@ -82,7 +82,7 @@ func (sr sr74hc595) WriteBit(bit uint) { // ?? bool
 	sr.srclk.Low()
 }
 
-func (sr sr74hc595) Write(data uint) {
+func (sr sn74hc595) Write(data uint) {
 	var mask = uint(math.Pow(2, float64(sr.outputPins-1)))
 	for i := uint(0); i < sr.outputPins; i++ {
 		sr.WriteBit(mask & (data << i))
@@ -90,7 +90,7 @@ func (sr sr74hc595) Write(data uint) {
 }
 
 // Latch moves the data from internal register to memory
-func (sr sr74hc595) Latch() {
+func (sr sn74hc595) Latch() {
 	sr.rclk.High()
 	sr.rclk.Low()
 }
