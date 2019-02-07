@@ -13,6 +13,7 @@ type sn74hc595 struct {
 	rclk          rpio.Pin
 	outputPins    uint
 	positiveLogic bool
+	lastData      uint
 }
 
 // SetInputPins sets and initializes pins connected to a shift register
@@ -59,12 +60,8 @@ func (sr *sn74hc595) initChipPins(outputPins uint, positiveLogic bool) (err erro
 	return nil
 }
 
-func (sn74hc595) Close() error {
-	return rpio.Close()
-}
-
 // WriteBit writes one bit into shift register
-func (sr sn74hc595) WriteBit(bit uint) { // ?? bool
+func (sr sn74hc595) writeBit(bit uint) { // ?? bool
 	if bit == 0 {
 		if sr.positiveLogic == true {
 			sr.ser.Low()
@@ -82,15 +79,26 @@ func (sr sn74hc595) WriteBit(bit uint) { // ?? bool
 	sr.srclk.Low()
 }
 
-func (sr sn74hc595) Write(data uint) {
-	var mask = uint(math.Pow(2, float64(sr.outputPins-1)))
-	for i := uint(0); i < sr.outputPins; i++ {
-		sr.WriteBit(mask & (data << i))
-	}
-}
-
 // Latch moves the data from internal register to memory
-func (sr sn74hc595) Latch() {
+func (sr sn74hc595) latch() {
 	sr.rclk.High()
 	sr.rclk.Low()
+}
+
+func (sr *sn74hc595) WriteData(data uint) {
+	sr.lastData = data
+	var mask = uint(math.Pow(2, float64(sr.outputPins-1)))
+	for i := uint(0); i < sr.outputPins; i++ {
+		sr.writeBit(mask & (data << i))
+	}
+	sr.latch()
+}
+
+// Returns the last written data
+func (sr sn74hc595) GetData() uint {
+	return sr.lastData
+}
+
+func (sn74hc595) Close() error {
+	return rpio.Close()
 }
