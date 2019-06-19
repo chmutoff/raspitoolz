@@ -12,33 +12,31 @@ func main() {
 	driver.MotorAClockwise()
 	driver.MotorBCounterclockwise()
 	for i := uint8(15); i <= 100; i++ {
-		println(i)
 		driver.MotorASetSpeed(i)
 		driver.MotorBSetSpeed(i)
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 300)
 	}
+	time.Sleep(time.Second)
 	for i := uint8(100); i >= 15; i-- {
-		println(i)
 		driver.MotorASetSpeed(i)
 		driver.MotorBSetSpeed(i)
-		time.Sleep(time.Millisecond * 100)
-		if i == 15 {
-			driver.MotorASetSpeed(0)
-			driver.MotorBSetSpeed(0)
-		}
+		time.Sleep(time.Millisecond * 300)
 	}
 
+	driver.MotorASetSpeed(0)
+	driver.MotorBSetSpeed(0)
+
 	/*
-		driver.MotorASetSpeed(100)
+		driver.MotorASetSpeed(80)
 		driver.MotorBSetSpeed(100)
 
 		driver.MotorAClockwise()
 		driver.MotorBClockwise()
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Second * 1)
 
 		driver.MotorACounterclockwise()
 		driver.MotorBCounterclockwise()
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Second * 1)
 
 		driver.MotorASetSpeed(0)
 		driver.MotorBSetSpeed(0)
