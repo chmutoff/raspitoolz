@@ -25,21 +25,4 @@ func main() {
 
 	driver.MotorASetSpeed(0)
 	driver.MotorBSetSpeed(0)
-
-	/*
-		driver.MotorASetSpeed(80)
-		driver.MotorBSetSpeed(100)
-
-		driver.MotorAClockwise()
-		driver.MotorBClockwise()
-		time.Sleep(time.Second * 1)
-
-		driver.MotorACounterclockwise()
-		driver.MotorBCounterclockwise()
-		time.Sleep(time.Second * 1)
-
-		driver.MotorASetSpeed(0)
-		driver.MotorBSetSpeed(0)
-		time.Sleep(time.Millisecond * 10)
-	*/
 }
